@@ -33,6 +33,9 @@ template <typename T>
 class HostStateBase : public NerveStateBase {
 private:
     T* mHost;
+    
+public:
+    HostStateBase(const char* stateName) : NerveStateBase(stateName) {}
 };
 
 }  // namespace al
