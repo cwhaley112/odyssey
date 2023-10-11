@@ -49,7 +49,8 @@ public:
     void initLiveActorKit(const al::SceneInitInfo& initInfo, s32 maxActors, s32 maxPlayers, s32 maxCameras);
     void initLiveActorKitImpl(const al::SceneInitInfo& initInfo, s32 maxActors, s32 maxPlayers, s32 maxCameras);
     void initDrawSystemInfo(const al::SceneInitInfo& initInfo);
-    void initLiveActorKitWithGraphics(const al::GraphicsInitArg& graphicsInitArg, const al::SceneInitInfo& initInfo, s32 maxActors, s32 maxPlayers, s32 maxCameras);
+    void initLiveActorKitWithGraphics(const al::GraphicsInitArg& graphicsInitArg, const al::SceneInitInfo& initInfo, s32 maxActors, s32 maxPlayers,
+                                      s32 maxCameras);
     void initLayoutKit(const al::SceneInitInfo& initInfo);
     void initSceneStopCtrl();
     void initSceneMsgCtrl();
@@ -59,5 +60,7 @@ public:
     al::AudioKeeper* getAudioKeeper() const override;
     al::SceneObjHolder* getSceneObjHolder() const override;
     al::CameraDirector* getCameraDirector() const override;
+
+    const sead::FixedSafeString<64>* getName() const { return &mName; }
 };
 }  // namespace al

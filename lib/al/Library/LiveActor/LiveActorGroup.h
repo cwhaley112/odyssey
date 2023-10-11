@@ -29,6 +29,9 @@ public:
     void killAll();
     void makeActorAliveAll();
     void makeActorDeadAll();
+
+    s32 getSize() const { return mActorCount; }
+    LiveActor* getActor(s32 ix) { return mActors[ix]; }
 };
 
 template <class T>

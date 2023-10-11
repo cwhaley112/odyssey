@@ -1,48 +1,57 @@
 #pragma once
 
+#include "al/Library/LiveActor/ActorClippingFunction.h"
 #include "al/Library/LiveActor/ActorInitFunction.h"
 #include "al/Library/Nerve/NerveStateBase.h"
-#include "al/Library/Scene/Scene.h"
 #include "container/seadPtrArray.h"
 
 namespace al {
+class DirLightParam;
+class KeyRepeatCtrl;
 class LayoutActor;
 class LiveActorGroup;
+class Scene;
+class SceneInitInfo;
+class SimpleLayoutAppearWaitEnd;
+class ViewRenderer;
+class WipeSimple;
 } // namespace al
 
-// double check these are not al TODO
-class SimpleLayoutAppearWaitEnd;
-class WipeSimple;
 class TalkMessage;
-class KeyRepeatCtrl;
 class WorldMapParts;
+class WorldMapRoute;
 class WorldMapKoopaShip;
 class ShineTowerRocket;
-class ShineTowerCommonKeeper;class WorldMapMovieUpdater;
-class ViewRenderer;
-class WorldMapCamera;
-class DirLightParam;
+class ShineTowerCommonKeeper;
 class StageSceneStateCollectionList;
+class WorldMapCamera;
+class WorldMapMovieUpdater;
+
+
+struct WorldMapRouteSelection {
+    WorldMapRoute* mSelection1;
+    WorldMapRoute* mSelection2;
+};
 
 class StageSceneStateWorldMap : public al::HostStateBase<al::Scene> {
 private:
-    SimpleLayoutAppearWaitEnd* mSimpleLayoutWorldSelect;
-    SimpleLayoutAppearWaitEnd* mSimpleLayoutWorldSelectMovie;
-    al::LayoutActor* mLayoutActor1;
-    al::LayoutActor* mLayoutActor2;
-    void* unk_0x88;
-    void* unk_0x88_2;
-    SimpleLayoutAppearWaitEnd* mSimpleLayoutWorldSelectCursor;
-    WipeSimple* mWipeWorld;
-    WipeSimple* mWipeWorldSelectCapture;
+    al::SimpleLayoutAppearWaitEnd* mSimpleLayoutWorldSelect;
+    al::SimpleLayoutAppearWaitEnd* mSimpleLayoutWorldSelectMovie;
+    al::LayoutActor* mParFooter;
+    al::LayoutActor* mParCounter;
+    al::LayoutActor** mWorldSelectionParts; // len = 17
+    al::LayoutActor** mBalloonFindParts; // len = 17
+    al::SimpleLayoutAppearWaitEnd* mSimpleLayoutWorldSelectCursor;
+    al::WipeSimple* mWipeWorld;
+    al::WipeSimple* mWipeWorldSelectCapture;
     TalkMessage* mTalkMessage;
-    KeyRepeatCtrl* mKeyRepeatCtrl;
+    al::KeyRepeatCtrl* mKeyRepeatCtrl;
     al::Scene* mScene;
     al::LiveActor* mLiveActor;
-    al::LiveActorGroup* mLiveActorGroup;
-    void* unk_0x88_3;
-    void* unk_0x88_4;
-    void* unk_0x10;
+    al::LiveActorGroup* mWorldMapActorGroup;
+    WorldMapParts** mWorldMapPointList; // len = 17
+    WorldMapRoute** mWorldMapRouteList; // len = 17
+    WorldMapRouteSelection* mWorldMapRouteSelection;
     WorldMapParts* mWorldMapParts;
     WorldMapKoopaShip* mWorldMapKoopaShip;
     ShineTowerRocket* mShineTowerRocket;
@@ -53,15 +62,14 @@ private:
     s32 mNextLockedWorldId = -1;
     s32 mUnlockWorldNum = 0;
     s32 mCurrentWorldIndex = 0;
-    // s32 unk_0x4;
-    void* unk_0x44 = nullptr;
+    float* mWorldMapIdList = nullptr; // len = 17
     s32 mNextLockedWorldNum = 0;
-    s32 mCurWorldNum = -1;
-    void* unk_0x8 = nullptr;
+    s32 mCurrentWorldNum = -1;
+    s32* mWorldMapUnlockIdList = nullptr; // this one is weird. used to index other lists
     WorldMapMovieUpdater* mWorldMapMovieUpdater;
-    ViewRenderer* mViewRenderer = nullptr;
+    al::ViewRenderer* mViewRenderer = nullptr;
     WorldMapCamera* mWorldMapCamera = nullptr;
-    DirLightParam* mDirLightParam = nullptr;
+    al::DirLightParam* mDirLightParam = nullptr;
     StageSceneStateCollectionList* mStageSceneStateCollectionList;
     bool mCanUnlockMoreWorlds = false;
     bool mGotAllMoonsInWorld = false;
@@ -69,7 +77,7 @@ private:
 
 public:
     StageSceneStateWorldMap(const char* stateName, al::Scene* scene, ShineTowerRocket* shineTowerRocket, const al::SceneInitInfo& sceneInitInfo, const al::ActorInitInfo& actorInitInfo, const al::LayoutInitInfo& layoutInitInfo, StageSceneStateCollectionList* stageSceneStateCollectionList);
-    virtual ~StageSceneStateWorldMap();
+    ~StageSceneStateWorldMap() override;
 
     void appear() override;
     void kill() override;
@@ -84,6 +92,11 @@ public:
     void exeDemoWorldOpen();
     void exeDemoWorldSelect();
     void exeDemoWorldUnlock();
+    void exeEnd();
+    void exeExit();
+    void exeIgnoreMessage();
+    void exeInit();
+    void exeWait();
     bool isCloseEndWipe() const;
     bool isOpenCollectionList() const;
     bool isOpenEndWipe() const;
